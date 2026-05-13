@@ -1,0 +1,95 @@
+---
+import { copy } from '../content/copy';
+---
+
+<section
+  id="surec"
+  data-reveal
+  class="py-20 md:py-28 overflow-hidden"
+>
+  <div class="max-w-[1280px] mx-auto px-8 md:px-16">
+    <div class="mb-16 md:mb-20 text-center">
+      <p class="eyebrow reveal-item mb-6">Nasıl Çalışırız</p>
+      <h2 class="display-heading reveal-item mx-auto" style="max-width: 22ch;">
+        Fikrinizden <em>büyümeye</em>,<br />
+        beş adımda
+      </h2>
+    </div>
+
+    <!-- Process steps — vertical timeline on mobile, horizontal on desktop -->
+    <div class="flex flex-col md:flex-row md:gap-0 relative">
+
+      <!-- Desktop connector line -->
+      <div
+        class="hidden md:block absolute top-8 left-0 right-0 h-px bg-[--text-faint]"
+        aria-hidden="true"
+      ></div>
+
+      {copy.process.map((step, i) => (
+        <div
+          class="process-step reveal-item flex flex-col md:flex-1 relative"
+          data-index={i}
+        >
+          <!-- Mobile left border -->
+          <div class="md:hidden absolute left-0 top-0 bottom-0 w-px bg-[--text-faint]" aria-hidden="true"></div>
+
+          <div class="pl-8 md:pl-0 md:pr-6 py-6 md:pt-0 md:pb-8">
+            <!-- Number -->
+            <div class="flex items-center gap-4 mb-6">
+              <span
+                class="font-display text-[--accent] md:mb-8 md:block"
+                style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; font-style: italic; line-height: 1;"
+              >
+                {step.num}
+              </span>
+            </div>
+
+            <h3
+              class="font-display text-[--text] mb-3"
+              style="font-size: clamp(1.1rem, 1.8vw, 1.4rem); font-weight: 300;"
+            >
+              {step.title}
+            </h3>
+            <p class="text-[--text-dim] text-sm leading-relaxed" style="max-width: 28ch;">
+              {step.body}
+            </p>
+          </div>
+
+          <!-- Active step accent underline -->
+          {i === 0 && (
+            <div class="absolute bottom-0 left-8 md:left-0 right-6 h-px bg-[--accent]" aria-hidden="true"></div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  const steps = document.querySelectorAll('.process-step');
+  let activeIndex = 0;
+
+  ScrollTrigger.create({
+    trigger: '#surec',
+    start: 'top 60%',
+    end: 'bottom 40%',
+    onUpdate: (self) => {
+      const newIndex = Math.floor(self.progress * steps.length);
+      const clamped = Math.min(newIndex, steps.length - 1);
+      if (clamped !== activeIndex) {
+        steps.forEach((s, i) => {
+          const num = s.querySelector('.font-display');
+          if (i === clamped) {
+            if (num) (num as HTMLElement).style.color = 'var(--accent)';
+          } else {
+            if (num) (num as HTMLElement).style.color = '';
+          }
+        });
+        activeIndex = clamped;
+      }
+    },
+  });
+</script>

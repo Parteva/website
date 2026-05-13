@@ -1,0 +1,58 @@
+---
+import { copy } from '../content/copy';
+---
+
+<footer class="border-t border-[--text-faint] py-12 md:py-16">
+  <div class="max-w-[1280px] mx-auto px-8 md:px-16">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+      <!-- Left: wordmark + motto -->
+      <div class="flex flex-col gap-2">
+        <a
+          href="/"
+          class="font-display text-xl text-[--text] hover:text-[--accent] transition-colors duration-300"
+          style="font-weight: 300;"
+        >
+          {copy.brand}
+        </a>
+        <p class="text-[--text-faint] text-xs" style="letter-spacing: 0.05em;">
+          {copy.footer.motto}
+        </p>
+      </div>
+
+      <!-- Center: nav links -->
+      <nav class="hidden md:flex items-center gap-8" aria-label="Footer navigasyon">
+        {copy.nav.links.map((link) => (
+          <a
+            href={link.href}
+            class="text-[--text-faint] hover:text-[--text-dim] transition-colors duration-300"
+            style="font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;"
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Right: social + copyright -->
+      <div class="flex flex-col gap-3 md:items-end">
+        <div class="flex gap-5">
+          <a
+            href={copy.contact.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-[--text-faint] hover:text-[--accent] transition-colors duration-300"
+            aria-label="Instagram"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+        </div>
+        <p class="text-[--text-faint]" style="font-size: 0.65rem; letter-spacing: 0.05em;">
+          {copy.footer.copyright}
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

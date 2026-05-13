@@ -1,0 +1,178 @@
+---
+import { copy } from '../content/copy';
+
+const groupIcons: Record<string, string> = {
+  integration: `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="10" cy="10" r="3"/>
+    <circle cx="30" cy="10" r="3"/>
+    <circle cx="10" cy="30" r="3"/>
+    <circle cx="30" cy="30" r="3"/>
+    <circle cx="20" cy="20" r="3"/>
+    <line x1="13" y1="10" x2="27" y2="10"/>
+    <line x1="10" y1="13" x2="10" y2="27"/>
+    <line x1="13" y1="30" x2="27" y2="30"/>
+    <line x1="30" y1="13" x2="30" y2="27"/>
+    <line x1="12.1" y1="12.1" x2="17.9" y2="17.9"/>
+    <line x1="22.1" y1="22.1" x2="27.9" y2="27.9"/>
+    <line x1="27.9" y1="12.1" x2="22.1" y2="17.9"/>
+    <line x1="17.9" y1="22.1" x2="12.1" y2="27.9"/>
+  </svg>`,
+  operations: `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 8 A12 12 0 0 1 32 20"/>
+    <path d="M32 20 A12 12 0 0 1 20 32"/>
+    <path d="M20 32 A12 12 0 0 1 8 20"/>
+    <path d="M8 20 A12 12 0 0 1 20 8"/>
+    <polyline points="28,16 32,20 28,24"/>
+    <rect x="15" y="15" width="10" height="10" rx="1"/>
+  </svg>`,
+  growth_chart: `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="5,34 5,6"/>
+    <polyline points="5,34 35,34"/>
+    <polyline points="7,26 15,18 22,22 33,10"/>
+    <polyline points="27,10 33,10 33,16"/>
+  </svg>`,
+};
+---
+
+<section
+  id="hizmetler"
+  data-reveal
+  class="py-20 md:py-28"
+>
+  <div class="max-w-[1280px] mx-auto px-8 md:px-16">
+
+    <!-- Section header -->
+    <div class="mb-6 md:mb-10 text-center">
+      <p class="eyebrow reveal-item mb-6">Hizmetler</p>
+      <h2 class="display-heading reveal-item mx-auto" style="max-width: 22ch;">
+        Her marka benzersizdir.<br />
+        <em>Sizin reçetenizi hazırlıyoruz.</em>
+      </h2>
+      <p class="text-[--text-dim] reveal-item text-sm leading-relaxed mx-auto mt-6" style="max-width: 44ch;">
+        Piyasadaki en güçlü sistemleri bir araya getiriyor ve birbirleriyle konuşturuyoruz.
+      </p>
+    </div>
+
+    <!-- 3 service groups -->
+    <div class="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-3 gap-px bg-[--text-faint]">
+      {copy.serviceGroups.map((group) => (
+        <article class="service-card group relative bg-[--bg] p-10 md:p-12 flex flex-col gap-7 reveal-item hover:bg-[--bg-elev] transition-colors duration-300 cursor-default">
+
+          <!-- Icon -->
+          <div
+            class="text-[--accent] group-hover:text-[--text] transition-colors duration-500"
+            set:html={groupIcons[group.icon]}
+          />
+
+          <!-- Number + Title -->
+          <div>
+            <span
+              class="block text-[--text-faint] mb-2"
+              style="font-size: 0.7rem; letter-spacing: 0.3em; font-family: 'DM Sans', sans-serif;"
+            >
+              {group.num}
+            </span>
+            <h3
+              class="font-display text-[--text] group-hover:text-[--accent] transition-colors duration-300"
+              style="font-size: clamp(1.35rem, 2.2vw, 1.75rem); font-weight: 300; line-height: 1.15;"
+            >
+              {group.title}
+            </h3>
+          </div>
+
+          <!-- Intro text -->
+          <p class="text-[--text-dim] text-sm leading-relaxed" style="max-width: 30ch;">
+            {group.intro}
+          </p>
+
+          <!-- Divider -->
+          <div class="h-px bg-[--text-faint] w-12 group-hover:w-full group-hover:bg-[--accent] transition-all duration-500"></div>
+
+          <!-- Service item list -->
+          <ul class="flex flex-col gap-2.5">
+            {group.items.map((item) => (
+              <li class="flex items-start gap-3 text-[--text-dim] text-sm">
+                <span
+                  class="mt-1.5 flex-shrink-0 w-1 h-1 rounded-full bg-[--accent] opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                  aria-hidden="true"
+                ></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <!-- Hover accent line bottom -->
+          <div
+            class="absolute bottom-0 left-10 right-10 h-px bg-[--accent] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"
+            aria-hidden="true"
+          ></div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Other solutions -->
+    <p
+      class="font-display reveal-item text-center text-[--text-faint] mt-12"
+      style="font-size: clamp(1.4rem, 2.2vw, 2rem); font-weight: 300; font-style: italic;"
+    >
+      İhtiyacınız olan diğer çözümler…
+    </p>
+
+    <!-- AI Products strip -->
+    <div class="mt-24 md:mt-36">
+      <div class="mb-12 text-center">
+        <p class="eyebrow reveal-item mb-4" id="urunler">Yazılım Çözümlerimiz</p>
+        <h3
+          class="font-display reveal-item text-[--text] mx-auto"
+          style="font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 300; line-height: 1.15; max-width: 28ch;"
+        >
+          E-Ticaretin Yükünü<br />
+          <em style="color: var(--accent); font-style: italic;">Hafifleten Yazılımlarımız</em>
+        </h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-[--text-faint]">
+        {copy.products.map((product) => (
+          <article class="product-card group relative bg-[--bg] p-8 md:p-10 flex flex-col gap-4 reveal-item cursor-default hover:bg-[--bg-elev] transition-colors duration-300">
+            <span
+              class="font-display text-[--accent]"
+              style="font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 300;"
+            >
+              {product.name}
+            </span>
+            <h4
+              class="font-display text-[--text]"
+              style="font-size: clamp(1.1rem, 1.8vw, 1.4rem); font-weight: 300; line-height: 1.2;"
+            >
+              {product.tagline}
+            </h4>
+            <p class="text-[--text-dim] text-sm leading-relaxed flex-1" style="max-width: 32ch;">
+              {product.body}
+            </p>
+            <span
+              class="mt-2 text-[--text-faint] group-hover:text-[--accent] transition-colors duration-300"
+              style="font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; font-family: 'DM Sans', sans-serif;"
+            >
+              {product.cta} →
+            </span>
+            <div
+              class="absolute bottom-0 left-8 right-8 h-px bg-[--accent] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"
+              aria-hidden="true"
+            ></div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  document.querySelectorAll('.service-card, .product-card').forEach((card) => {
+    card.addEventListener('mouseenter', () =>
+      gsap.to(card, { scale: 1.01, duration: 0.3, ease: 'power2.out' }));
+    card.addEventListener('mouseleave', () =>
+      gsap.to(card, { scale: 1, duration: 0.3, ease: 'power2.out' }));
+  });
+</script>

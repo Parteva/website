@@ -1,0 +1,285 @@
+---
+import { copy } from '../content/copy';
+import HeroSceneWrapper from './HeroSceneWrapper';
+---
+
+<section
+  id="hero"
+  class="hero-outer relative"
+  style="height: 200vh;"
+>
+  <div class="sticky top-0 h-screen w-full overflow-hidden" style="background: var(--bg);">
+
+    <!-- ① 3D CANVAS -->
+    <div
+      class="absolute inset-0 pointer-events-none"
+      style="z-index: 1;"
+      id="hero-canvas-wrap"
+    >
+      <HeroSceneWrapper client:only="react" />
+    </div>
+
+    <!-- ① b GOLDEN GLOW — appears on celebration -->
+    <div
+      id="hero-glow"
+      class="absolute inset-0 pointer-events-none"
+      style="z-index: 1; background: radial-gradient(ellipse at 62% 18%, rgba(154,110,32,0.22) 0%, transparent 55%); opacity: 0;"
+      aria-hidden="true"
+    ></div>
+
+    <!-- ② FOREGROUND: left-aligned main headline copy -->
+    <div
+      class="hero-content-col absolute inset-0 flex flex-col justify-center pointer-events-none select-none px-8 md:px-16 max-w-[54%] md:max-w-[55%]"
+      style="z-index: 2;"
+    >
+      <!-- Eyebrow -->
+      <!-- Primary headline -->
+      <h1
+        data-hero-text
+        class="font-display"
+        style="
+          font-size: clamp(2.4rem, 5.2vw, 4.8rem);
+          font-weight: 300;
+          line-height: 1.08;
+          letter-spacing: -0.02em;
+          color: var(--text);
+          opacity: 0;
+          max-width: 16ch;
+        "
+      >
+        {copy.hero.headline1}<br />
+        {copy.hero.headline2}<br />
+        <em style="color: var(--accent); font-style: italic;">{copy.hero.headlineAccent}</em>
+      </h1>
+
+      <!-- Sub line -->
+      <p
+        data-hero-text
+        class="hero-sub-text mt-8"
+        style="
+          opacity: 0;
+          font-size: clamp(0.82rem, 1.15vw, 0.92rem);
+          color: var(--text-dim);
+          font-weight: 300;
+          line-height: 1.75;
+          max-width: 36ch;
+        "
+      >
+        Veri odaklı pazarlama ve kusursuz<br class="md:hidden" /> operasyon kurgusu ile işinizi büyütürken<br class="md:hidden" /> kârlılığınızı artırıyoruz.
+      </p>
+
+      <!-- CTA -->
+      <div data-hero-text class="mt-8 md:mt-10 flex flex-col items-start gap-4" style="opacity: 0;">
+        <a
+          href="#iletisim"
+          class="pointer-events-auto py-2.5 md:py-3.5 uppercase transition-colors duration-300"
+          style="
+            background: var(--text);
+            color: var(--bg);
+            letter-spacing: 0.12em;
+            font-size: clamp(0.52rem, 1.4vw, 0.7rem);
+            padding-left: clamp(0.8rem, 3vw, 1.75rem);
+            padding-right: clamp(0.8rem, 3vw, 1.75rem);
+            white-space: nowrap;
+          "
+          onmouseover="this.style.background='var(--accent)'"
+          onmouseout="this.style.background='var(--text)'"
+        >
+          {copy.hero.cta}
+        </a>
+        <a
+          href="#islerimiz"
+          class="pointer-events-auto eyebrow"
+          style="color: var(--text-dim); font-size: 0.65rem;"
+        >
+          {copy.hero.ctaSecondary}
+        </a>
+      </div>
+    </div>
+
+    <!-- ③ Scroll indicator -->
+    <div
+      id="scroll-indicator"
+      class="hidden md:flex absolute bottom-7 right-1/4 flex-col items-center gap-2 pointer-events-none select-none"
+      style="z-index: 2;"
+    >
+      <span class="eyebrow" style="color: var(--text-faint); font-size: 0.54rem;">Kaydır</span>
+      <div
+        class="w-px h-9 animate-pulse"
+        style="background: linear-gradient(to bottom, var(--text-faint), transparent);"
+      ></div>
+    </div>
+
+    <!-- ④ Triumph overlay: right side -->
+    <div
+      id="hero-triumph"
+      class="hidden md:block absolute top-1/2 right-8 md:right-16 pointer-events-none select-none"
+      style="z-index: 3; transform: translateY(-50%); text-align: right;"
+    >
+      <p
+        id="hero-closing-text"
+        class="font-display"
+        style="
+          font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+          font-style: italic;
+          font-weight: 300;
+          color: var(--text);
+          max-width: 24ch;
+          line-height: 1.3;
+          letter-spacing: -0.01em;
+        "
+      >
+        {`"${copy.heroClosingLine}"`.split('').map((ch) => (
+          <span class="hero-closing-char" style="opacity:0;">{ch}</span>
+        ))}
+        <span
+          id="hero-closing-cursor"
+          aria-hidden="true"
+          style="display:inline-block;width:2px;height:0.78em;background:var(--text);vertical-align:middle;margin-left:2px;opacity:0;"
+        ></span>
+      </p>
+      <div class="mt-4 flex items-center justify-end gap-3">
+        <a
+          href="#manifesto"
+          class="pointer-events-auto eyebrow"
+          style="color: var(--accent); font-size: 0.58rem; letter-spacing: 0.3em;"
+        >
+          Devam et ↓
+        </a>
+        <div class="h-px" style="width: 2.5rem; background: var(--accent);"></div>
+      </div>
+    </div>
+
+    <!-- ⑤ Celebration particle container -->
+    <div
+      id="hero-celebration"
+      class="absolute inset-0 pointer-events-none overflow-hidden"
+      style="z-index: 4;"
+      aria-hidden="true"
+    ></div>
+
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ── Page entrance ──────────────────────────────────────── */
+  setTimeout(() => {
+    const items = document.querySelectorAll('[data-hero-text]');
+    gsap.to(items, {
+      opacity: 1,
+      y: 0,
+      duration: 1.0,
+      stagger: 0.16,
+      ease: 'power3.out',
+    });
+  }, 500);
+
+  /* ── Triumph typewriter ─────────────────────────────────── */
+  setTimeout(() => {
+    const chars  = document.querySelectorAll<HTMLElement>('.hero-closing-char');
+    const cursor = document.getElementById('hero-closing-cursor');
+    const SPEED  = 0.038;
+    const total  = chars.length * SPEED;
+
+    if (cursor) {
+      gsap.set(cursor, { opacity: 1 });
+      gsap.to(cursor, {
+        opacity: 0,
+        duration: 0.38,
+        repeat: Math.ceil(total / 0.76),
+        yoyo: true,
+        ease: 'steps(1)',
+      });
+      gsap.to(cursor, { opacity: 0, duration: 0.4, delay: total + 0.6 });
+    }
+
+    gsap.to(chars, {
+      opacity: 1,
+      duration: 0.01,
+      stagger: { each: SPEED, ease: 'none' },
+    });
+  }, 0);
+
+  /* ── Celebration effect ─────────────────────────────────── */
+  function triggerCelebration() {
+    const wrap = document.getElementById('hero-celebration');
+    const glow = document.getElementById('hero-glow');
+
+    /* Golden glow flash */
+    if (glow) {
+      gsap.fromTo(glow, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      gsap.to(glow, { opacity: 0, duration: 1.8, ease: 'power2.in', delay: 0.35 });
+    }
+
+    if (!wrap) return;
+
+    /* Burst particles from figure top (~62% x, ~18% y of viewport) */
+    const cx = window.innerWidth * 0.62;
+    const cy = window.innerHeight * 0.18;
+    const colors = ['#9a6e20', '#b8882a', '#c49830', '#d4a840', '#1a1410'];
+
+    for (let i = 0; i < 32; i++) {
+      const dot = document.createElement('div');
+      const size = 2 + Math.random() * 4;
+      dot.style.cssText = [
+        'position:absolute',
+        `width:${size}px`,
+        `height:${size}px`,
+        'border-radius:50%',
+        `background:${colors[Math.floor(Math.random() * colors.length)]}`,
+        `left:${cx}px`,
+        `top:${cy}px`,
+        'pointer-events:none',
+        'will-change:transform,opacity',
+      ].join(';');
+      wrap.appendChild(dot);
+
+      const angle = (i / 32) * Math.PI * 2 + (Math.random() - 0.5) * 0.45;
+      const dist  = 55 + Math.random() * 190;
+
+      gsap.to(dot, {
+        x: Math.cos(angle) * dist,
+        y: Math.sin(angle) * dist,
+        opacity: 0,
+        scale: 0.3,
+        duration: 1.1 + Math.random() * 0.9,
+        ease: 'power2.out',
+        delay: Math.random() * 0.2,
+        onComplete: () => dot.remove(),
+      });
+    }
+  }
+
+  /* ── Scroll-driven effects ──────────────────────────────── */
+  const heroEl   = document.getElementById('hero') as HTMLElement;
+  const indicator = document.getElementById('scroll-indicator');
+  const triumph  = document.getElementById('hero-triumph');
+  let celebFired = false;
+
+  ScrollTrigger.create({
+    trigger: heroEl,
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: true,
+    onUpdate: (self) => {
+      const p = self.progress;
+
+      /* Scroll indicator disappears quickly */
+      if (indicator) indicator.style.opacity = String(Math.max(0, 1 - p / 0.05));
+
+      /* Fire celebration once when near end of scroll */
+      if (triumph) {
+        const tp = Math.max(0, Math.min(1, (p - 0.84) / 0.12));
+        if (tp >= 0.95 && !celebFired) {
+          celebFired = true;
+          triggerCelebration();
+        }
+        if (tp < 0.2) celebFired = false;
+      }
+    },
+  });
+</script>

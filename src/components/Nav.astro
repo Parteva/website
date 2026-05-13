@@ -1,0 +1,190 @@
+---
+import { copy } from '../content/copy';
+---
+
+<header
+  data-nav
+  class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 md:px-16 py-6 mix-blend-normal"
+  style="opacity: 0;"
+>
+  <!-- Gradient backdrop -->
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="background: linear-gradient(to bottom, rgba(245,241,234,0.92) 0%, transparent 100%);"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Wordmark -->
+  <a
+    href="/"
+    class="font-display text-4xl tracking-wide text-[--text] relative z-10 hover:text-[--accent] transition-colors duration-300"
+    style="font-weight: 300;"
+  >
+    {copy.brand}
+  </a>
+
+  <!-- Desktop nav -->
+  <nav class="hidden md:flex items-center gap-10 relative z-10" aria-label="Ana navigasyon">
+    {copy.nav.links.map((link) => (
+      <a
+        href={link.href}
+        class="text-[--text-dim] hover:text-[--text] text-sm tracking-widest uppercase transition-colors duration-300"
+        style="font-size: 0.7rem; letter-spacing: 0.2em;"
+      >
+        {link.label}
+      </a>
+    ))}
+    <a
+      href="#iletisim"
+      class="text-[--bg] bg-[--text] hover:bg-[--accent] hover:text-[--bg-elev] px-5 py-2 text-xs tracking-widest uppercase transition-colors duration-300"
+      style="letter-spacing: 0.12em; white-space: nowrap;"
+    >
+      {copy.nav.cta}
+    </a>
+  </nav>
+
+  <!-- Mobile hamburger -->
+  <button
+    id="mobile-menu-btn"
+    class="md:hidden relative z-10 flex flex-col justify-center gap-[5px] w-10 h-10"
+    aria-label="Menüyü aç"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+  >
+    <span class="hamburger-line block w-7 h-[1.5px] bg-[--text] transition-all duration-300 origin-center"></span>
+    <span class="hamburger-line block w-5 h-[1.5px] bg-[--text] transition-all duration-300 origin-center"></span>
+    <span class="hamburger-line block w-7 h-[1.5px] bg-[--text] transition-all duration-300 origin-center"></span>
+  </button>
+</header>
+
+<!-- Nav scroll overlay -->
+<div
+  id="nav-overlay"
+  class="fixed inset-0 pointer-events-none"
+  style="z-index: 45; background: var(--bg); opacity: 0;"
+  aria-hidden="true"
+></div>
+
+<!-- Mobile menu -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 bg-[--bg] flex flex-col items-center justify-center gap-2"
+  style="z-index: 48; opacity: 0; pointer-events: none;"
+  aria-hidden="true"
+>
+  <!-- Decorative line -->
+  <div class="absolute top-0 left-0 right-0 h-px bg-[--accent] opacity-30"></div>
+
+  {copy.nav.links.map((link) => (
+    <a
+      href={link.href}
+      class="mobile-nav-link font-display text-[--text] py-4 px-8 w-full text-center transition-colors duration-300 active:text-[--accent]"
+      style="font-size: clamp(2rem, 8vw, 2.8rem); font-weight: 300; opacity: 0; transform: translateY(20px);"
+    >
+      {link.label}
+    </a>
+  ))}
+
+  <a
+    href="#iletisim"
+    class="mobile-nav-link mt-6 px-8 py-3 bg-[--text] text-[--bg] text-xs tracking-widest uppercase"
+    style="letter-spacing: 0.15em; opacity: 0; transform: translateY(20px);"
+  >
+    {copy.nav.cta}
+  </a>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  /* ── Smooth anchor navigation ───────────────────────────── */
+  const overlay = document.getElementById('nav-overlay');
+
+  function navigateTo(href: string) {
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    // Subtle flash: fade in quickly, linger, fade out
+    if (overlay) {
+      gsap.killTweensOf(overlay);
+      gsap.fromTo(overlay,
+        { opacity: 0 },
+        {
+          opacity: 0.35,
+          duration: 0.18,
+          ease: 'power2.out',
+          onComplete: () =>
+            gsap.to(overlay, { opacity: 0, duration: 1.1, ease: 'power3.in' }),
+        }
+      );
+    }
+
+    const lenis = (window as any).__lenis;
+    if (lenis) {
+      lenis.scrollTo(target as HTMLElement, {
+        duration: 1.6,
+        easing: (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+        offset: -80,
+      });
+    } else {
+      (target as HTMLElement).scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (!href || href === '#') return;
+      e.preventDefault();
+      navigateTo(href);
+    });
+  });
+
+  /* ── Mobile menu ────────────────────────────────────────── */
+  const btn  = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const lines = document.querySelectorAll<HTMLElement>('.hamburger-line');
+  const navLinks = document.querySelectorAll<HTMLElement>('#mobile-menu .mobile-nav-link');
+  let open = false;
+
+  function openMenu() {
+    open = true;
+    btn?.setAttribute('aria-expanded', 'true');
+    menu?.setAttribute('aria-hidden', 'false');
+    if (menu) menu.style.pointerEvents = 'auto';
+
+    gsap.to(menu, { opacity: 1, duration: 0.25, ease: 'power2.out' });
+    gsap.fromTo(navLinks,
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.4, stagger: 0.07, ease: 'power3.out', delay: 0.1 }
+    );
+
+    if (lines[0]) gsap.to(lines[0], { rotation: 45, y: 6.5, duration: 0.3, ease: 'power2.out' });
+    if (lines[1]) gsap.to(lines[1], { opacity: 0, duration: 0.2 });
+    if (lines[2]) gsap.to(lines[2], { rotation: -45, y: -6.5, duration: 0.3, ease: 'power2.out' });
+  }
+
+  function closeMenu() {
+    open = false;
+    btn?.setAttribute('aria-expanded', 'false');
+    menu?.setAttribute('aria-hidden', 'true');
+
+    gsap.to(navLinks, { opacity: 0, y: 12, duration: 0.2, stagger: 0.04, ease: 'power2.in' });
+    gsap.to(menu, { opacity: 0, duration: 0.25, delay: 0.15, ease: 'power2.in',
+      onComplete: () => { if (menu) menu.style.pointerEvents = 'none'; }
+    });
+
+    if (lines[0]) gsap.to(lines[0], { rotation: 0, y: 0, duration: 0.3, ease: 'power2.out' });
+    if (lines[1]) gsap.to(lines[1], { opacity: 1, duration: 0.2, delay: 0.1 });
+    if (lines[2]) gsap.to(lines[2], { rotation: 0, y: 0, duration: 0.3, ease: 'power2.out' });
+  }
+
+  function toggleMenu() { open ? closeMenu() : openMenu(); }
+
+  btn?.addEventListener('click', toggleMenu);
+
+  document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+    link.addEventListener('click', () => { if (open) closeMenu(); });
+  });
+
+</script>

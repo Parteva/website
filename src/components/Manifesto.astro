@@ -1,0 +1,96 @@
+---
+import { copy } from '../content/copy';
+
+const HIGHLIGHT = ['yük', 'yükü', 'ekosistem', 'kuruyoruz.'];
+const lines = copy.manifesto.split('\n');
+
+interface Token { char: string; accent: boolean; }
+
+function tokenize(line: string): Token[] {
+  const tokens: Token[] = [];
+  const words = line.split(' ');
+  words.forEach((word, wi) => {
+    const accent = HIGHLIGHT.includes(word.toLowerCase());
+    for (const ch of word) tokens.push({ char: ch, accent });
+    if (wi < words.length - 1) tokens.push({ char: ' ', accent: false });
+  });
+  return tokens;
+}
+---
+
+<section
+  id="manifesto"
+  data-reveal
+  class="relative py-20 md:py-28 flex items-center justify-center overflow-hidden"
+>
+  <!-- Divider top -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-px h-24 bg-gradient-to-b from-transparent to-[--text-faint]" aria-hidden="true"></div>
+
+  <div class="max-w-[1280px] mx-auto px-8 text-center">
+    <p class="eyebrow reveal-item mb-10">Vizyon</p>
+
+    <blockquote
+      class="font-display text-[--text] leading-tight"
+      style="font-size: clamp(2rem, 4.5vw, 3.8rem); font-weight: 300;"
+    >
+      {lines.map((line, li) => (
+        <span class="block" style={li > 0 ? 'margin-top: 0.15em' : ''}>
+          {tokenize(line).map((t) => (
+            <span
+              class="manifesto-char"
+              style={`opacity:0;${t.accent ? 'color:var(--accent);font-style:italic;' : ''}`}
+            >{t.char}</span>
+          ))}
+        </span>
+      ))}
+      <span
+        id="manifesto-cursor"
+        aria-hidden="true"
+        style="display:inline-block;width:2px;height:0.78em;background:var(--accent);vertical-align:middle;margin-left:3px;opacity:0;"
+      ></span>
+    </blockquote>
+  </div>
+
+  <!-- Divider bottom -->
+  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-px h-24 bg-gradient-to-t from-transparent to-[--text-faint]" aria-hidden="true"></div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const chars  = document.querySelectorAll<HTMLElement>('.manifesto-char');
+  const cursor = document.getElementById('manifesto-cursor');
+  const SPEED  = 0.038; // seconds per character
+
+  ScrollTrigger.create({
+    trigger: '#manifesto',
+    start: 'top 65%',
+    once: true,
+    onEnter: () => {
+      const total = chars.length * SPEED;
+
+      // Cursor appears, blinks while typing
+      if (cursor) {
+        gsap.set(cursor, { opacity: 1 });
+        gsap.to(cursor, {
+          opacity: 0,
+          duration: 0.38,
+          repeat: Math.ceil(total / 0.76),
+          yoyo: true,
+          ease: 'steps(1)',
+        });
+        // Fade out after typing finishes
+        gsap.to(cursor, { opacity: 0, duration: 0.4, delay: total + 0.6 });
+      }
+
+      // Characters appear one by one
+      gsap.to(chars, {
+        opacity: 1,
+        duration: 0.01,
+        stagger: { each: SPEED, ease: 'none' },
+      });
+    },
+  });
+</script>

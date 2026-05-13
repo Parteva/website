@@ -1,0 +1,99 @@
+---
+import { copy } from '../content/copy';
+
+const icons: Record<string, string> = {
+  rocket: `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 4C18 4 28 9 28 18v8l-10 5L8 26v-8C8 9 18 4 18 4Z"/>
+    <circle cx="18" cy="15" r="3"/>
+    <line x1="11" y1="26" x2="7" y2="30"/>
+    <line x1="25" y1="26" x2="29" y2="30"/>
+  </svg>`,
+  settings: `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round">
+    <circle cx="18" cy="18" r="4.5"/>
+    <line x1="18" y1="5" x2="18" y2="10"/>
+    <line x1="18" y1="26" x2="18" y2="31"/>
+    <line x1="5" y1="18" x2="10" y2="18"/>
+    <line x1="26" y1="18" x2="31" y2="18"/>
+    <line x1="9.4" y1="9.4" x2="13" y2="13"/>
+    <line x1="23" y1="23" x2="26.6" y2="26.6"/>
+    <line x1="26.6" y1="9.4" x2="23" y2="13"/>
+    <line x1="13" y1="23" x2="9.4" y2="26.6"/>
+  </svg>`,
+  growth: `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="4,28 4,8"/>
+    <polyline points="4,28 32,28"/>
+    <rect x="7" y="20" width="5" height="8" rx="0.5"/>
+    <rect x="16" y="13" width="5" height="15" rx="0.5"/>
+    <rect x="25" y="7" width="5" height="21" rx="0.5"/>
+  </svg>`,
+};
+---
+
+<section id="cozumler" data-reveal class="py-16 md:py-20 bg-[--bg-elev]">
+  <div class="max-w-[1280px] mx-auto px-8 md:px-16">
+
+    <div class="mb-14 md:mb-20 text-center">
+      <p class="eyebrow reveal-item mb-5">Hangi Aşamadasınız?</p>
+      <h2
+        class="font-display reveal-item text-[--text]"
+        style="font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 300; line-height: 1.12;"
+      >
+        Size uygun çözümü birlikte <em style="color:var(--accent);font-style:italic;">bulalım</em>
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-[--text-faint]">
+      {copy.segments.map((seg) => (
+        <a
+          href={seg.href}
+          class="segment-card group relative bg-[--bg] p-10 md:p-12 flex flex-col gap-6 reveal-item
+                 hover:bg-[--bg] transition-colors duration-300 cursor-pointer"
+        >
+          <!-- Icon -->
+          <div
+            class="text-[--accent] group-hover:text-[--text] transition-colors duration-300"
+            set:html={icons[seg.icon]}
+          />
+
+          <!-- Title -->
+          <h3
+            class="font-display text-[--text] group-hover:text-[--accent] transition-colors duration-300"
+            style="font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 300; line-height: 1.2;"
+          >
+            {seg.title}
+          </h3>
+
+          <!-- Body -->
+          <p class="text-[--text-dim] text-sm leading-relaxed" style="max-width: 28ch;">
+            {seg.body}
+          </p>
+
+          <!-- Arrow -->
+          <span
+            class="mt-auto text-[--text-faint] group-hover:text-[--accent] transition-all duration-300 group-hover:translate-x-1 inline-block"
+            style="font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; font-family: 'DM Sans', sans-serif;"
+          >
+            Keşfet →
+          </span>
+
+          <!-- Hover accent line -->
+          <div
+            class="absolute bottom-0 left-10 right-10 h-px bg-[--accent] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"
+            aria-hidden="true"
+          ></div>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  document.querySelectorAll('.segment-card').forEach((card) => {
+    card.addEventListener('mouseenter', () =>
+      gsap.to(card, { y: -4, duration: 0.3, ease: 'power2.out' }));
+    card.addEventListener('mouseleave', () =>
+      gsap.to(card, { y: 0, duration: 0.3, ease: 'power2.out' }));
+  });
+</script>

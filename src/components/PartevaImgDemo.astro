@@ -1,0 +1,158 @@
+---
+---
+
+<section class="py-16 md:py-20 bg-[--bg-elev]" data-reveal>
+  <div class="max-w-[1280px] mx-auto px-8 md:px-16">
+
+    <div class="flex flex-col lg:grid lg:grid-cols-[1fr_380px_1fr] lg:items-stretch gap-12 lg:gap-10">
+
+      <!-- Sol: Başlık + açıklama -->
+      <div class="flex flex-col justify-between gap-10 reveal-item">
+        <div>
+          <p class="eyebrow mb-4" style="color: var(--accent);">P-Design · Canlı Demo</p>
+          <h3
+            class="font-display text-[--text]"
+            style="font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 300; line-height: 1.12;"
+          >
+            Ham fotoğraftan<br />
+            <em style="color: var(--accent); font-style: italic;">pazaryeri-hazır görsel</em>
+          </h3>
+        </div>
+      </div>
+
+      <!-- Orta: Before/After slider -->
+      <div class="reveal-item flex flex-col" style="align-self: stretch;">
+        <div
+          id="ba-slider"
+          class="relative overflow-hidden select-none flex-1"
+          style="
+            min-height: 460px;
+            border-radius: 2px;
+            cursor: ew-resize;
+            box-shadow: 0 24px 64px -12px rgba(26,20,16,0.22);
+          "
+          aria-label="Önce/Sonra karşılaştırma kaydırıcısı"
+        >
+          <!-- AFTER image — full (base layer) -->
+          <img
+            src="/partevaimg/sonrasi.png"
+            alt="Sonrası — Partevaimg ile üretilmiş"
+            class="absolute inset-0 w-full h-full object-cover"
+            style="object-position: center 70%;"
+            draggable="false"
+          />
+
+          <!-- BEFORE image — clipped from the right -->
+          <img
+            id="ba-before"
+            src="/partevaimg/oncesi.jpeg"
+            alt="Öncesi — ham ürün fotoğrafı"
+            class="absolute inset-0 w-full h-full object-cover"
+            draggable="false"
+            style="clip-path: inset(0 50% 0 0);"
+          />
+
+          <!-- Labels -->
+          <span
+            class="absolute top-4 left-4 eyebrow pointer-events-none"
+            style="color: #fff; font-size: 0.52rem; letter-spacing: 0.3em; text-shadow: 0 1px 4px rgba(0,0,0,0.5);"
+          >
+            Öncesi
+          </span>
+          <span
+            class="absolute top-4 right-4 eyebrow pointer-events-none"
+            style="color: #fff; font-size: 0.52rem; letter-spacing: 0.3em; text-shadow: 0 1px 4px rgba(0,0,0,0.5);"
+          >
+            Sonrası
+          </span>
+
+          <!-- Divider handle -->
+          <div
+            id="ba-handle"
+            class="absolute top-0 bottom-0 pointer-events-none"
+            style="left: 50%; transform: translateX(-50%); width: 2px;"
+            aria-hidden="true"
+          >
+            <div class="absolute inset-0 bg-white/90"></div>
+            <div
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
+              style="width: 36px; height: 36px; border-radius: 50%; background: white; box-shadow: 0 2px 12px rgba(0,0,0,0.25);"
+            >
+              <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+                <path d="M5 1L1 5L5 9" stroke="#6a5a45" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M11 1L15 5L11 9" stroke="#6a5a45" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-center text-[--text-faint] mt-5" style="font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;">
+          Kaydırarak karşılaştır
+        </p>
+      </div>
+
+      <!-- Sağ: Adımlar -->
+      <div class="flex flex-col gap-8 reveal-item justify-center">
+        {[
+          { num: '01', title: 'Ham fotoğraf yükle', body: 'Ürünü sade bir zeminde ya da doğal ortamında çekin. Stüdyo koşulu gerekmez.' },
+          { num: '02', title: 'AI arka plan & ışık üretir', body: 'P-Design, profesyonel kompozisyon, ışık ve arka plan otomatik olarak üretir.' },
+          { num: '03', title: 'Pazaryeri-hazır görsel', body: 'Trendyol, Hepsiburada veya Amazon standartlarına uygun, yayına hazır görsel saniyeler içinde.' },
+        ].map((step) => (
+          <div class="flex gap-5 items-start">
+            <span
+              class="font-display text-[--accent] flex-shrink-0"
+              style="font-size: 0.72rem; letter-spacing: 0.3em; margin-top: 2px;"
+            >
+              {step.num}
+            </span>
+            <div>
+              <h4
+                class="font-display text-[--text] mb-1"
+                style="font-size: 1.05rem; font-weight: 300; line-height: 1.2;"
+              >
+                {step.title}
+              </h4>
+              <p class="text-[--text-dim] text-sm leading-relaxed" style="max-width: 28ch;">
+                {step.body}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  const slider = document.getElementById('ba-slider') as HTMLElement;
+  const before = document.getElementById('ba-before') as HTMLImageElement;
+  const handle = document.getElementById('ba-handle') as HTMLElement;
+
+  if (slider && before && handle) {
+    let dragging  = false;
+    let targetPct = 0.5;
+    let currentPct = 0.5;
+
+    function setTarget(clientX: number) {
+      const rect = slider.getBoundingClientRect();
+      targetPct = Math.max(0.02, Math.min(0.98, (clientX - rect.left) / rect.width));
+    }
+
+    function render() {
+      currentPct += (targetPct - currentPct) * 0.14;
+      before.style.clipPath = `inset(0 ${(1 - currentPct) * 100}% 0 0)`;
+      handle.style.left     = `${currentPct * 100}%`;
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+
+    slider.addEventListener('mousedown',  (e) => { dragging = true; setTarget(e.clientX); });
+    window.addEventListener('mouseup',    ()  => { dragging = false; });
+    window.addEventListener('mousemove',  (e) => { if (dragging) setTarget(e.clientX); });
+
+    slider.addEventListener('touchstart', (e) => { dragging = true; setTarget(e.touches[0].clientX); }, { passive: true });
+    window.addEventListener('touchend',   ()  => { dragging = false; });
+    window.addEventListener('touchmove',  (e) => { if (dragging) setTarget(e.touches[0].clientX); }, { passive: true });
+  }
+</script>

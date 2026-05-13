@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --max-width-content: 1280px;
+}
+
+:root {
+  --bg:        #f5f1ea;
+  --bg-elev:   #ede6d6;
+  --text:      #1a1410;
+  --text-dim:  #6a5a45;
+  --text-faint:#b0a08a;
+  --accent:    #9a6e20;
+}
+
+html {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: auto; /* lenis handles smooth scroll */
+}
+
+body {
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+/* Typography base */
+.font-display {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+}
+
+.eyebrow {
+  font-size: 0.82rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+}
+
+.display-heading {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+.display-heading em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* Reveal animations base */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Custom cursor */
+#cursor-dot,
+#cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10000;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+}
+
+#cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--text);
+}
+
+#cursor-ring {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--text-dim);
+  transition: width 0.25s, height 0.25s, border-color 0.25s;
+}
+
+#cursor-ring.hovered {
+  width: 56px;
+  height: 56px;
+  border-color: var(--text);
+}
+
+@media (pointer: coarse) {
+  #cursor-dot, #cursor-ring { display: none; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--text-faint); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* Selection */
+::selection {
+  background: var(--accent);
+  color: var(--bg-elev);
+}
+
+/* ── Section beam ───────────────────────────────────────── */
+[data-reveal] {
+  position: relative;
+}
+
+.section-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to left,
+    transparent 0%,
+    rgba(154, 110, 32, 0.18) 35%,
+    rgba(154, 110, 32, 0.65) 75%,
+    var(--accent) 100%
+  );
+  box-shadow: 0 0 10px 1px rgba(154, 110, 32, 0.45);
+  transform: scaleX(0);
+  transform-origin: right center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Touch devices: disable hover-only states ───────────── */
+@media (hover: none) {
+  .client-visual {
+    filter: grayscale(0) opacity(1) !important;
+  }
+}
+
+/* ── Mobile overrides ───────────────────────────────────── */
+@media (max-width: 767px) {
+  #hero {
+    height: 160vh;
+  }
+
+  .hero-content-col {
+    max-width: 100% !important;
+  }
+
+  .hero-sub-text {
+    font-size: 0.85rem !important;
+    max-width: 100% !important;
+  }
+
+  .display-heading {
+    font-size: clamp(2rem, 8vw, 2.8rem);
+  }
+
+  .segment-card,
+  .service-card,
+  .product-card {
+    padding: 1.75rem !important;
+  }
+}
