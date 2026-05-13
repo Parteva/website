@@ -174,6 +174,7 @@ export const copy = {
     email: 'hello@parteva.com',
     location: 'İstanbul · Türkiye',
     instagram: 'https://www.instagram.com/parteva.co/',
+    twitter: 'https://x.com/HelloParteva',
     linkedin: 'https://linkedin.com/company/parteva',
     ctaTitle: 'Operasyonel yükünüzden kurtulmaya hazır mısınız?',
     ctaBody: '30 dakikalık ücretsiz keşif görüşmesinde mevcut durumunuzu analiz ediyor, size uygun çözümü birlikte konuşuyoruz.',
